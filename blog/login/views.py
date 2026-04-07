@@ -1,3 +1,21 @@
-from django.shortcuts import render
+
 
 # Create your views here.
+from django.shortcuts import render, redirect
+from .models import User
+from .forms import UserForm
+
+def user(request):
+    user = User.objects.all()
+    return render(request, 'user.html', {'user': user})
+
+
+def add_user(request):
+    if request.method == "POST":
+        user = UserForm(request.POST)
+        if user.is_valid():
+            user.save()
+        return redirect('/users/')
+    else:
+        form = UserForm()
+        return render(request, "add_user.html",{'form': form})
